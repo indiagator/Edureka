@@ -7,7 +7,7 @@
 public class HelloWorld
 {    
     /**this is the main method */
-    public static void main(int[] a) 
+    public static void main(String[] a) 
         {
             System.out.println("This is the First Day)"); //This line initially was the second line of the method
             System.out.println("Hello Edureka"); //first I wrote hello world, then I changed it to Hello Edureka
