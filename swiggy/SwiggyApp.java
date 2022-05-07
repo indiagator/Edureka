@@ -1,7 +1,50 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 
 /**Basic Java App Boiler Plate Code */
 public class SwiggyApp
 {
+
+    public static Path filePath; //*newCode
+    public static BufferedReader in_customer; //*newCode
+
+    public static void parseFile()
+    {
+       try{ 
+           
+        in_customer = Files.newBufferedReader(filePath);
+
+        String line;
+        boolean firstLineFlag=true;
+
+        while((line=in_customer.readLine())!=null)
+        {
+
+            if(firstLineFlag==false)
+            {
+                firstLineFlag = true; // this is to ignore the first line of file which is ReadMe
+            }
+            else
+            {
+                System.out.println(line);
+            }
+
+        }
+
+         }
+         catch(IOException ex){
+
+            System.out.println("Invalid File, Please enter another path");
+            System.exit(-1);  
+         }
+
+
+    }
+
 
     public static void checkBodyTemp()
     {
@@ -190,6 +233,26 @@ public class SwiggyApp
     public static void main(String[] args)
     {
 
+        /* Reading the File System - Begins  */
+
+        System.out.println("This is the Basic File Reader");
+        System.out.println("*****************************");
+        System.out.println("");
+
+        Path p1 = Paths.get("data\\"+"customer.csv");
+        filePath = p1.toAbsolutePath();  
+        //can be checked on console to be as intended
+        System.out.println("Reading File at Location "+filePath.toString());
+        
+        // code after this ***
+        System.out.println("*****************************");
+        System.out.println("");
+
+        parseFile();
+
+        /* Reading the File System - Ends  */
+
+
         System.out.println("********************");
         System.out.println("");
 
@@ -209,6 +272,7 @@ public class SwiggyApp
         System.out.println("Phone Number of the new Del Guy is "+firstDelGuy.Get_phoneNumber());
         System.out.println("Vehicle Type of the new Del Guy is "+firstDelGuy.Get_vehicle());
         System.out.println(firstDelGuy.poke());
+
 
 
 

@@ -23,12 +23,19 @@ public class HelloWorldAnonymousClasses {
       
         HelloWorld englishGreeting = new EnglishGreeting();
         
-        HelloWorld frenchGreeting = new HelloWorld() {
+        HelloWorld frenchGreeting = new HelloWorld()
+         {
             String name = "tout le monde";
-            public void greet() {
+
+            @Override
+            public void greet() 
+            {
                 greetSomeone("tout le monde");
             }
-            public void greetSomeone(String someone) {
+
+            @Override
+            public void greetSomeone(String someone)
+            {
                 name = someone;
                 System.out.println("Salut " + name);
             }

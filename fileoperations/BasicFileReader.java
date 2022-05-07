@@ -13,7 +13,6 @@ public class BasicFileReader
 
     public static void parseFile()
     {
-
        try{ 
            
         in = Files.newBufferedReader(filePath);
