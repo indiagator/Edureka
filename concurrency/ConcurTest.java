@@ -7,8 +7,8 @@ public class ConcurTest {
 
         Wallet commonWallet = new Wallet(500);
 
-        MyRunnable john = new MyRunnable("John",commonWallet);
-        MyRunnable sally = new MyRunnable("Sally",commonWallet);
+        MyRunnable john = new MyRunnable("John",commonWallet,3000, 73);
+        MyRunnable sally = new MyRunnable("Sally",commonWallet,2000, 34);
 
         Thread john_thread = new Thread(john);
         Thread sally_thread = new Thread(sally);

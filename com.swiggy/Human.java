@@ -29,6 +29,11 @@ public class Human
         return this.bodyTemp;
     }
 
+    public void setBodyTemp(double bodyTemp)
+    {
+            this.bodyTemp = bodyTemp;
+    }
+
     public String poke()
     {
         return "This Human has still not found his purpose in life";

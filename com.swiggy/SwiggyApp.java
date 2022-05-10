@@ -9,14 +9,33 @@ import java.nio.file.Paths;
 public class SwiggyApp
 {
 
-    public static Path filePath; //*newCode
-    public static BufferedReader in_customer; //*newCode
+    private  Path fileCustomerPath; //*newCode
+    private  Path fileKitchenPath; //*newCode
 
-    public static void parseFile()
+    //private  BufferedReader in_customer; //*newCode
+    private Customer main_customer;
+
+    public Customer getMain_Customer(){
+
+        return this.main_customer;
+    }
+    
+
+    
+
+    public  void parseCustomerFile()
     {
+
+        BufferedReader in_customer;
+        String custName;
+        String custPhone;
+        String bodyTemp;
+
+        String[] splitCustomerData;
+
        try{ 
            
-        in_customer = Files.newBufferedReader(filePath);
+        in_customer = Files.newBufferedReader(this.fileCustomerPath);
 
         String line;
         boolean firstLineFlag=true;
@@ -26,11 +45,17 @@ public class SwiggyApp
 
             if(firstLineFlag==false)
             {
-                firstLineFlag = true; // this is to ignore the first line of file which is ReadMe
+                firstLineFlag = true; // this is to ignore the first line of file which is Table Schema
             }
             else
             {
-                System.out.println(line);
+               // System.out.println(line);
+
+                splitCustomerData = line.split(",");               
+
+                main_customer = new Customer(splitCustomerData[0], splitCustomerData[1]);
+                //main_customer.setBodyTemp(Double.valueOf(splitCustomerData[2]).doubleValue());
+
             }
 
         }
@@ -45,8 +70,55 @@ public class SwiggyApp
 
     }
 
+    public void parseKitchenFile()
+    {
 
-    public static void checkBodyTemp()
+        BufferedReader in_kitchen;
+
+        String kitchenName;        
+        Location kitchenLocation;
+        Dish[] kitchenDishes;
+        Review[] kitchenReviews;
+
+        String[] splitKitchenDataLineWise;
+
+        try{ 
+           
+            in_kitchen = Files.newBufferedReader(this.fileKitchenPath);
+    
+            String line;
+            boolean firstLineFlag=true;
+    
+            while((line=in_kitchen.readLine())!=null)
+            {
+    
+                if(firstLineFlag==false)
+                {
+                    firstLineFlag = true; // this is to ignore the first line of file which is Table Schema
+                }
+                else
+                {
+                   // System.out.println(line);
+    
+                   //splitKitchenDataLineWise = line.split(",");               
+    
+                    //main_customer = new Customer(splitKitchenDataLineWise[0], splitKitchenDataLineWise[1]);
+                    //main_customer.setBodyTemp(Double.valueOf(splitCustomerData[2]).doubleValue());
+    
+                }
+    
+            }
+    
+             }
+             catch(IOException ex){
+    
+                System.out.println("Invalid File, Please enter another path");
+                System.exit(-1);  
+             }
+
+    }
+
+    public  void checkBodyTemp()
     {
 
         double delGuyBodTemp = 98.6; // Delivery Guy's Body Temperature being declared and initialized
@@ -230,50 +302,88 @@ public class SwiggyApp
 
     }
 
+     public void readAllData()
+     {
+
+        Path p1 = Paths.get("data\\"+"customer.csv");
+        this.fileCustomerPath = p1.toAbsolutePath(); 
+
+        Path p2 = Paths.get("data\\"+"kitchen.csv");
+        this.fileKitchenPath = p2.toAbsolutePath();
+
+        //can be checked on console to be as intended
+        System.out.println("Reading File at Location "+fileCustomerPath.toString());
+
+        // code after this ***
+        System.out.println("*****************************");
+       System.out.println("");
+
+        this.parseCustomerFile();
+        this.parseKitchenFile();
+
+        /* Reading the File System - Ends  */
+
+       System.out.println("********************");
+       System.out.println("");
+
+     }
+
     public static void main(String[] args)
     {
 
+        SwiggyApp main_app = new SwiggyApp(); // Declare Instantiate and Initialize Object of Class SWiggyApp 
+
+        main_app.readAllData();
+
+        System.out.println("Welcome to Swiggy App "+main_app.getMain_Customer().Get_name());
+        System.out.println("Your current registered phonenumber is "+main_app.getMain_Customer().Get_phoneNumber());
+
+        
+
         /* Reading the File System - Begins  */
 
-        System.out.println("This is the Basic File Reader");
-        System.out.println("*****************************");
-        System.out.println("");
+       // System.out.println("This is the Basic File Reader");
+        //System.out.println("*****************************");
+        //System.out.println("");
 
-        Path p1 = Paths.get("data\\"+"customer.csv");
-        filePath = p1.toAbsolutePath();  
+        
+
+        //Path p1 = Paths.get("data\\"+"customer.csv");
+       // filePath = p1.toAbsolutePath();  
         //can be checked on console to be as intended
-        System.out.println("Reading File at Location "+filePath.toString());
+       // System.out.println("Reading File at Location "+filePath.toString());
         
         // code after this ***
-        System.out.println("*****************************");
-        System.out.println("");
+       // System.out.println("*****************************");
+       // System.out.println("");
 
-        parseFile();
+       // parseFile();
 
         /* Reading the File System - Ends  */
 
 
-        System.out.println("********************");
-        System.out.println("");
+       // System.out.println("********************");
+       // System.out.println("");
 
 
-        Customer myself = new Customer("Suresh Athiraj","9935237896");
-        System.out.println("Welcome to Swiggy "+myself.Get_name());
-        System.out.println("Your Registered Phone Number is "+myself.Get_phoneNumber());
-        System.out.println(myself.poke());
+       // Customer myself = new Customer("Suresh Athiraj","9935237896");
+       // System.out.println("Welcome to Swiggy "+myself.Get_name());
+       // System.out.println("Your Registered Phone Number is "+myself.Get_phoneNumber());
+       // System.out.println(myself.poke());
 
-        System.out.println("");
-        System.out.println("********************");
+       // System.out.println("");
+       // System.out.println("********************");
         
-        DeliveryGuy firstDelGuy = new DeliveryGuy("001","black_pulsar");
+       // DeliveryGuy firstDelGuy = new DeliveryGuy("001","black_pulsar");
 
-        System.out.println("Name of the new Del Guy is "+firstDelGuy.Get_name());
-        System.out.println("Emp Id of the new Del Guy is "+firstDelGuy.Get_emp_id());
-        System.out.println("Phone Number of the new Del Guy is "+firstDelGuy.Get_phoneNumber());
-        System.out.println("Vehicle Type of the new Del Guy is "+firstDelGuy.Get_vehicle());
-        System.out.println(firstDelGuy.poke());
+       // System.out.println("Name of the new Del Guy is "+firstDelGuy.Get_name());
+       // System.out.println("Emp Id of the new Del Guy is "+firstDelGuy.Get_emp_id());
+        //System.out.println("Phone Number of the new Del Guy is "+firstDelGuy.Get_phoneNumber());
+       // System.out.println("Vehicle Type of the new Del Guy is "+firstDelGuy.Get_vehicle());
+       // System.out.println(firstDelGuy.poke());
 
 
+        
 
 
     }    

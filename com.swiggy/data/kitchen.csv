@@ -1,0 +1,19 @@
+Kitchen file has multiple sections
+Uncle's Kitchen
+345,1276
+chicken biriyani,345
+chicken shawarma,180
+butter chicken,250
+haleem,150
+mutton biriyani,450
+paneer masala,250
+fish wrap,180
+fish tikka,350
+veg burger,120
+fruit salad,80
+***end-of-dish-list***
+amazing food,4
+great taste,5
+poor hygiene,2
+***end-of-rating-list***
+

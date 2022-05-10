@@ -3,27 +3,36 @@ public class Wallet {
     private int balance;
 
 
-
     public Wallet(int balance)
     {
         this.balance = balance;
     }
 
-    public int getBalance()
+    public synchronized int getBalance()
     {
         return balance;
     }
 
-    public int topUp(int topUpAmnt)    
+    public synchronized int topUp(int topUpAmnt)    
     {
-        balance = balance + topUpAmnt;
+
+        if(this.balance < 10000) // max wallet value
+        {
+        this.balance = this.balance + topUpAmnt;
+        }
+
         return balance;
+
     }
 
-    public int makePayment(int pymntAmnt)
+    public synchronized void makePayment(int pymntAmnt, String usrname)
     {
 
-        balance = balance - pymntAmnt;
-        return balance;
+        if(this.balance > pymntAmnt)
+        {
+        this.balance = this.balance - pymntAmnt;
+        System.out.println("A payment is made by "+usrname+" and the new Balance is "+this.balance);
+        }
+       
     }
 }

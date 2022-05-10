@@ -2,11 +2,15 @@ public class MyRunnable implements Runnable {
 
     private String userName;
     private Wallet userWallet;
+    private int freq;
+    private int withdrawalAmnt;
 
-    public MyRunnable(String userName, Wallet w)
+    public MyRunnable(String userName, Wallet w, int freq, int withdrawalAmnt)
     {
         this.userName = userName;
         this.userWallet = w;
+        this.freq = freq;
+        this.withdrawalAmnt = withdrawalAmnt;
     }
 
     @Override
@@ -22,17 +26,15 @@ public class MyRunnable implements Runnable {
 
 
             try{
-            Thread.sleep(3000);
-                if(userWallet.getBalance() > 100)
-                    {
-                    System.out.println(this.userName+"just made a withdrawal and the new balance is INR"+userWallet.makePayment(100));
-                    }        
-                    //else{}
-            }
-            catch(InterruptedException e)
-            {
+                    //System.out.println(this.userName+"just made a withdrawal and the new balance is INR"+userWallet.makePayment(100));
+                    this.userWallet.makePayment(this.withdrawalAmnt, this.userName);
+                    Thread.sleep(this.freq);                
+
+                }
+                catch(InterruptedException e)
+                {
                 e.printStackTrace();
-            }
+                }
         }
     }
     

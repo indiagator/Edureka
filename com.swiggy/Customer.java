@@ -11,7 +11,7 @@ public class Customer extends Human {
 
         super.name = name;
         super.phoneNumber = phoneNumber;
-    }
+    }    
 
     @Override //annotation
     public String poke()
