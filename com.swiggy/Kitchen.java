@@ -10,8 +10,40 @@ public class Kitchen {
         this.name = name;
         this.location = location;
 
+        this.menu = new Dish[10];
+        this.reviews = new Review[10];
+
     }
 
+    public String getName()
+    {
+        return this.name;
+    }
 
-    
+    public Location getLocation()
+    {
+        return this.location;
+    }
+
+    public Dish[] getMenu()
+    {
+
+        return this.menu;
+    }
+
+    public Review[] getReview(){
+
+            return this.reviews;
+    }    
+
+    public void setMenu(Dish[] menu)
+    {
+        this.menu = menu;
+    }
+
+    public void setReviews(Review[] reviews)
+    {
+        this.reviews = reviews;
+    }
+
 }
