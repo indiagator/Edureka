@@ -5,6 +5,8 @@ public class Kitchen {
     private Dish[] menu;
     private Review[] reviews;
 
+    private int cookingTime = 30; //minutes
+
     public Kitchen(String name, Location location){
 
         this.name = name;
@@ -13,6 +15,9 @@ public class Kitchen {
         this.menu = new Dish[10];
         this.reviews = new Review[10];
 
+    }
+    public int getCookingTime() {
+        return this.cookingTime;
     }
 
     public String getName()
@@ -43,7 +48,27 @@ public class Kitchen {
 
     public void setReviews(Review[] reviews)
     {
+
         this.reviews = reviews;
+    }
+
+    public double getAvgRating()
+    {
+        double avgRating;
+
+        int ratingSum = 0;
+
+        int i = 0;
+        while(reviews[i]!=null)
+        {
+            ratingSum = ratingSum + reviews[i].getRating();
+            i++;
+        }
+
+        avgRating = ratingSum/i;
+
+        return avgRating;
+
     }
 
 }

@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Scanner;
 
 /**Basic Java App Boiler Plate Code */
 public class SwiggyApp
@@ -36,6 +37,8 @@ public class SwiggyApp
         String custName;
         String custPhone;
         String bodyTemp;
+        Location tempLocation;
+        Wallet tempWallet;
 
         String[] splitCustomerData;
 
@@ -57,10 +60,20 @@ public class SwiggyApp
             {
                // System.out.println(line);
 
-                splitCustomerData = line.split(",");               
+                splitCustomerData = line.split(",");
 
-                main_customer = new Customer(splitCustomerData[0], splitCustomerData[1]);
-                //main_customer.setBodyTemp(Double.valueOf(splitCustomerData[2]).doubleValue());
+                String tempLocationString = splitCustomerData[3];
+                String[] tempLocationCoordinates = tempLocationString.split("\\$");
+
+                int tempX = Integer.valueOf(tempLocationCoordinates[0]).intValue();
+                int tempY = Integer.valueOf(tempLocationCoordinates[1]).intValue();
+
+                tempLocation = new Location(tempX,tempY);
+
+                tempWallet = new Wallet(Integer.valueOf(splitCustomerData[4]).intValue());
+
+                main_customer = new Customer(splitCustomerData[0],splitCustomerData[1],tempLocation,tempWallet);
+                main_customer.setBodyTemp(Double.valueOf(splitCustomerData[2])); //unboxing
 
             }
 
@@ -185,20 +198,20 @@ public class SwiggyApp
                     {
                         String[] tempDish = (tempMenu[i]).split("\\$");
                         menu[i] = new Dish(tempDish[0], Integer.valueOf(tempDish[1]));
-                        System.out.println(menu[i].getName()+" has a price of INR "+menu[i].getPrice());
+                       // System.out.println(menu[i].getName()+" has a price of INR "+menu[i].getPrice());
                     }
 
                     kitchenList[kitchenCounter].setMenu(menu);
 
-                    System.out.println("Kitchen Menu for "+kitchenList[kitchenCounter].getName()+"is SET!");
+                    //System.out.println("Kitchen Menu for "+kitchenList[kitchenCounter].getName()+"is SET!");
 
 
                     String[] tempReviews = (splitKitchenData[3]).split("\\&");
 
-                    for(String s: tempReviews)
-                    {
-                        System.out.println(s);
-                    }
+                    //for(String s: tempReviews)
+                    //{
+                       // System.out.println(s);
+                   // }
                     
 
                     int tempReviewCntr = 0;
@@ -207,10 +220,13 @@ public class SwiggyApp
                     {
                         String[] temps_s = s.split("\\$");
                         kitchenReviews[tempReviewCntr] = new Review(temps_s[0], Integer.valueOf(temps_s[1]) );
-                        System.out.println(kitchenReviews[tempReviewCntr].getComment()+" and a rating of "+kitchenReviews[tempReviewCntr].getRating());
+                       // System.out.println(kitchenReviews[tempReviewCntr].getComment()+" and a rating of "+kitchenReviews[tempReviewCntr].getRating());
                         tempReviewCntr++;
 
                     }
+
+                    kitchenList[kitchenCounter].setReviews(kitchenReviews);
+
                     /*
                     try
                     {
@@ -226,7 +242,7 @@ public class SwiggyApp
                         System.out.println("Yes!! We caught the Exepction");
                     }
                     */
-                   System.out.println("******Kitchen  Data Ends****** \n");
+                  // System.out.println("******Kitchen  Data Ends****** \n");
 
 
                     //Last Line of the Loop
@@ -437,6 +453,21 @@ public class SwiggyApp
 
     }
 
+    public double getDeliveryTime(Customer customer, Kitchen kitchen)
+    {
+        double distance = 0.0;
+        int deliverySpeed = 7; // has to be moved to Environment Class definition
+        double deliveryTime = 0.0;
+
+        int x_distance = customer.getLocation().getX_lat() - kitchen.getLocation().getX_lat();
+        int y_distance = customer.getLocation().getY_long() - kitchen.getLocation().getY_long();
+
+        distance = Math.sqrt((x_distance)*(x_distance)+(y_distance)*(y_distance));
+        deliveryTime = distance/deliverySpeed;
+
+        return deliveryTime;
+    }
+
      public void readAllData()
      {
 
@@ -447,44 +478,152 @@ public class SwiggyApp
         this.fileKitchenPath = p2.toAbsolutePath();
 
         //can be checked on console to be as intended
-        System.out.println("Reading File at Location "+fileCustomerPath.toString());
-        System.out.println("Reading File at Location "+fileKitchenPath.toString());
+       // System.out.println("Reading File at Location "+fileCustomerPath.toString());
+       // System.out.println("Reading File at Location "+fileKitchenPath.toString());
 
         // code after this ***
-        System.out.println("*****************************");
-       System.out.println("");
+        //System.out.println("*****************************");
+       //System.out.println("");
 
         this.parseCustomerFile();
         this.parseKitchenFile();
 
         /* Reading the File System - Ends  */
 
-       System.out.println("********************");
-       System.out.println("");
+       //System.out.println("********************");
+      // System.out.println("");
 
      }
 
     public static void main(String[] args)
     {
+        Scanner console_in = new Scanner(System.in);
+        Scanner console_in_2 = new Scanner(System.in);
+
+        Customer customer;
+        int rest_chosen = 0; // chosen restaurant's index number
+        String dishes_chosen; // chosen dish's index numbers seperated by commas
+        Kitchen user_kitchen; //kitchen chosen by the user
+        Dish user_dish; // dish chosen by the user
+        Order order; //current order
+        Dish[] temp_dish_list = new Dish[5];
 
         SwiggyApp main_app = new SwiggyApp(); // Declare Instantiate and Initialize Object of Class SWiggyApp 
 
         main_app.readAllData(); // Load all the Data from CSV files into Ram (Objects)
 
-        System.out.println("Welcome to Swiggy App "+main_app.getMain_Customer().Get_name());
-        System.out.println("Your current registered phonenumber is "+main_app.getMain_Customer().Get_phoneNumber());
+        customer = main_app.getMain_Customer();
+
+        System.out.println("**************** \n");
+
+        System.out.println("Welcome to Swiggy App "+customer.Get_name());
+        System.out.println("Your current registered phonenumber is "+customer.Get_phoneNumber());
+        System.out.println("Your current Body Temperature is "+customer.Get_bodyTemp());
+        System.out.println("Your current location is X-"+customer.getLocation().getX_lat()+" Y-"+customer.getLocation().getY_long());
+        System.out.println("Your Wallet Balance is INR"+customer.getWallet().getBalance()+"\n");
+
+
 
         int tempLength  = main_app.getKitchenList().length;
         Kitchen[] tempKitchenList = main_app.getKitchenList();
 
+        System.out.println("**************** \n");
+
+        System.out.println("Please Choose a Restaurant (1/2/3/...)\n");
+
         int i = 0;
         while(tempKitchenList[i]!=null)
         {
-            System.out.println("***Kitchen Data Begins*** \n");
-            System.out.println((tempKitchenList)[i].getName()+" is at location X: "+(tempKitchenList)[i].getLocation().getX_lat()+" Y: "+(tempKitchenList)[i].getLocation().getY_long());
-            System.out.println("***Kitchen Data Ends*** \n");
+            //System.out.println("***Kitchen Data Begins*** \n");
+            System.out.println((i+1)+". "+(tempKitchenList)[i].getName()+" will deliver in "+main_app.getDeliveryTime(main_app.getMain_Customer(),main_app.getKitchenList()[i])+" minutes"+" and has a Rating of "+(main_app.getKitchenList()[i]).getAvgRating());
+            //System.out.println("***Kitchen Data Ends*** \n");
             i++;
         }
+
+        System.out.println("**************** \n");
+
+        System.out.println("Please Enter the Index of the Restaurant in the format (1/2/3/...) : ");
+        rest_chosen = console_in.nextInt();
+
+        user_kitchen = main_app.getKitchenList()[rest_chosen-1];
+
+        System.out.println("**************** \n");
+
+        System.out.println("Please Choose a Dish (1/2/3/...)\n");
+
+        int dishCounter = 0;
+        while(user_kitchen.getMenu()[dishCounter]!=null)
+        {
+            Dish tempDish= user_kitchen.getMenu()[dishCounter];
+            System.out.println((dishCounter+1)+". "+tempDish.getName()+" INR"+tempDish.getPrice());
+            dishCounter++;
+
+        }
+
+        System.out.println("Please Enter the Dishes (max-5) you want seperated by commas in the format (2,4,3...) : ");
+        dishes_chosen = console_in_2.nextLine();
+
+        //parse the string dishes_chosen
+        String[] tempDishIndexesString = dishes_chosen.split(",");
+        int[] tempDishIndexesInt = new int[5];
+
+        int index_cntr=0;
+        for(String s: tempDishIndexesString)
+        {
+            tempDishIndexesInt[index_cntr] = Integer.valueOf(s);
+            temp_dish_list[index_cntr] = user_kitchen.getMenu()[tempDishIndexesInt[index_cntr]];
+            System.out.println("You chose "+ temp_dish_list[index_cntr].getName());
+        }
+
+        //user_dish = user_kitchen.getMenu()[dish_chosen-1];
+
+        //temp_dish_list[0] = user_dish;
+
+        System.out.println("**************** \n");
+
+
+        //System.out.println("You chose "+user_dish.getName()+"! Please make a Payment of INR"+user_dish.getPrice());
+
+        System.out.println("**************** \n");
+
+        //System.out.println("Please confirm Payment of INR"+user_dish.getPrice()+" by choosing an Integer (y-1/n-0) ?");
+
+        double int_id = Math.random();
+        String order_id = Double.toString(int_id);
+        order = new Order(order_id, temp_dish_list, user_kitchen, customer);
+
+        System.out.println("Please confirm a Payment of INR"+order.getOrder_amnt()+" by choosing an Integer (y-1/n-0) ?");
+
+        int pymnt_confrmtn = console_in.nextInt();
+
+        System.out.println("**************** \n");
+
+
+        if(pymnt_confrmtn == 1)
+        {
+            // Deduct Payment Amnt from User Wallet and Create an Order + Assign a Delivery Guy
+
+
+            try
+            {
+                    if(customer.getWallet().makePaymnt(order.getOrder_amnt()))
+                    {
+                        System.out.println("Order was Placed! Finding a Delivery Guy");
+                    }
+
+            }
+            catch (Exception e)
+            {
+
+                e.printStackTrace();
+                System.out.println(e.toString());
+            }
+        }
+
+
+
+
+
 
         /*
         for(Kitchen k : main_app.getKitchenList())
