@@ -19,7 +19,7 @@ public class Wallet {
         return this.balance;
     }
 
-    public boolean makePaymnt(int amnt) throws Exception {
+    public boolean makePaymnt(int amnt)  {
 
         boolean success_flag=false;
 
@@ -29,7 +29,8 @@ public class Wallet {
         }
         else
         {
-            throw new Exception("Insufficient Funds, Please topUp the Wallet");
+            //throw new Exception("Insufficient Funds, Please topUp the Wallet");
+            //throw new RuntimeException("Insufficient Funds, Please topUp the Wallet");
         }
 
         return success_flag;

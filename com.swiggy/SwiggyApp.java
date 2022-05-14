@@ -3,25 +3,31 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 
 /**Basic Java App Boiler Plate Code */
-public class SwiggyApp
+public class SwiggyApp // extends Object
 {
     private  Path fileCustomerPath; //*newCode
     private  Path fileKitchenPath; //*newCode
 
     //private  BufferedReader in_customer; //*newCode
     private Customer main_customer;
-    private Kitchen[] kitchenList;
+    private List<Kitchen> kitchenList;
 
     public SwiggyApp()
     {
-        this.kitchenList = new Kitchen[10];
+
+        this.kitchenList = new ArrayList<>();
+
     }
 
-    public Kitchen[] getKitchenList()
+    public List<Kitchen> getKitchenList()
     {
+
         return this.kitchenList;
     }
 
@@ -158,7 +164,7 @@ public class SwiggyApp
                     //System.out.println(myKitchen.getName());
                    // System.out.println(myKitchen.getLocation().getX_lat());
 
-                    kitchenList[kitchenCounter] =  new Kitchen(kitchenName,kitchenLocation);
+                    kitchenList.add(kitchenCounter, new Kitchen(kitchenName,kitchenLocation));
 
 
                     //System.out.println("******Kitchen  Data Begins****** \n");
@@ -201,7 +207,7 @@ public class SwiggyApp
                        // System.out.println(menu[i].getName()+" has a price of INR "+menu[i].getPrice());
                     }
 
-                    kitchenList[kitchenCounter].setMenu(menu);
+                    kitchenList.get(kitchenCounter).setMenu(menu);
 
                     //System.out.println("Kitchen Menu for "+kitchenList[kitchenCounter].getName()+"is SET!");
 
@@ -225,7 +231,7 @@ public class SwiggyApp
 
                     }
 
-                    kitchenList[kitchenCounter].setReviews(kitchenReviews);
+                    kitchenList.get(kitchenCounter).setReviews(kitchenReviews);
 
                     /*
                     try
@@ -499,6 +505,8 @@ public class SwiggyApp
     {
         Scanner console_in = new Scanner(System.in);
         Scanner console_in_2 = new Scanner(System.in);
+        Scanner console_in_3 = new Scanner(System.in);
+
 
         Customer customer;
         int rest_chosen = 0; // chosen restaurant's index number
@@ -524,18 +532,21 @@ public class SwiggyApp
 
 
 
-        int tempLength  = main_app.getKitchenList().length;
-        Kitchen[] tempKitchenList = main_app.getKitchenList();
+        int tempLength  = main_app.getKitchenList().size();
+
+        List<Kitchen> tempKitchenList = main_app.getKitchenList();
 
         System.out.println("**************** \n");
 
         System.out.println("Please Choose a Restaurant (1/2/3/...)\n");
 
         int i = 0;
-        while(tempKitchenList[i]!=null)
+        Iterator<Kitchen> kitchenIterator = tempKitchenList.iterator();
+        while(kitchenIterator.hasNext())
         {
             //System.out.println("***Kitchen Data Begins*** \n");
-            System.out.println((i+1)+". "+(tempKitchenList)[i].getName()+" will deliver in "+main_app.getDeliveryTime(main_app.getMain_Customer(),main_app.getKitchenList()[i])+" minutes"+" and has a Rating of "+(main_app.getKitchenList()[i]).getAvgRating());
+            Kitchen kitchen = kitchenIterator.next();
+            System.out.println((i+1)+". "+kitchen.getName()+" will deliver in "+main_app.getDeliveryTime(main_app.getMain_Customer(),kitchen)+" minutes"+" and has a Rating of "+kitchen.getAvgRating());
             //System.out.println("***Kitchen Data Ends*** \n");
             i++;
         }
@@ -545,7 +556,7 @@ public class SwiggyApp
         System.out.println("Please Enter the Index of the Restaurant in the format (1/2/3/...) : ");
         rest_chosen = console_in.nextInt();
 
-        user_kitchen = main_app.getKitchenList()[rest_chosen-1];
+        user_kitchen = main_app.getKitchenList().get(rest_chosen-1);
 
         System.out.println("**************** \n");
 
@@ -560,8 +571,8 @@ public class SwiggyApp
 
         }
 
-        System.out.println("Please Enter the Dishes (max-5) you want seperated by commas in the format (2,4,3...) : ");
-        dishes_chosen = console_in_2.nextLine();
+        System.out.println("Please Enter the Dishes (max-5) you want, seperated by commas in the format (2,4,3...) : ");
+        dishes_chosen = console_in_2.nextLine(); //user enters a comma seperated String
 
         //parse the string dishes_chosen
         String[] tempDishIndexesString = dishes_chosen.split(",");
@@ -570,9 +581,10 @@ public class SwiggyApp
         int index_cntr=0;
         for(String s: tempDishIndexesString)
         {
-            tempDishIndexesInt[index_cntr] = Integer.valueOf(s);
+            tempDishIndexesInt[index_cntr] = Integer.valueOf(s) - 1;
             temp_dish_list[index_cntr] = user_kitchen.getMenu()[tempDishIndexesInt[index_cntr]];
             System.out.println("You chose "+ temp_dish_list[index_cntr].getName());
+            index_cntr++;
         }
 
         //user_dish = user_kitchen.getMenu()[dish_chosen-1];
@@ -604,19 +616,57 @@ public class SwiggyApp
             // Deduct Payment Amnt from User Wallet and Create an Order + Assign a Delivery Guy
 
 
-            try
-            {
-                    if(customer.getWallet().makePaymnt(order.getOrder_amnt()))
-                    {
-                        System.out.println("Order was Placed! Finding a Delivery Guy");
+
+            boolean pymntSuccess = false;
+
+            while(pymntSuccess == false) {
+
+
+                //  try
+                // {
+                if (customer.getWallet().makePaymnt(order.getOrder_amnt())) {
+                    System.out.println("Order Id:" + order.getId() + " for Amount INR" + order.getOrder_amnt() + " was placed successfully");
+                    int tempCntr = 0;
+                    while (order.getDish_list()[tempCntr] != null) {
+                        System.out.println((tempCntr + 1) + ". " + order.getDish_list()[tempCntr].getName());
+                        tempCntr++;
+
                     }
 
-            }
-            catch (Exception e)
-            {
+                    System.out.println("Your New Wallet Balance is INR" + customer.getWallet().getBalance() + " Finding a Delivery Guy");
+                    pymntSuccess = true;
 
-                e.printStackTrace();
-                System.out.println(e.toString());
+                } else {
+                    System.out.println("Insufficient Funds");
+                    System.out.println("Do you want to TopUp your Wallet ? If Yes then enter amount If no then enter - no");
+                    String topUpInput = console_in_3.nextLine();
+
+                    //String testString = "no";
+
+                    if (topUpInput.equals("no")) {
+
+
+                    } else {
+                        int topUpAmnt = Integer.valueOf(topUpInput);
+                        customer.getWallet().topUp(topUpAmnt);
+
+                        System.out.println("Your New Balance is INR" + customer.getWallet().getBalance());
+
+
+                    }
+
+                }
+
+                //}
+                //catch (RuntimeException e)
+                // {
+
+                //  e.printStackTrace();
+                //  System.out.println(e.toString());
+                //  System.out.println("Do you want to TopUp your Wallet ?");
+                // }
+
+
             }
         }
 
