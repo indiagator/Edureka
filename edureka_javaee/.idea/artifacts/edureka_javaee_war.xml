@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="edureka_javaee:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>edureka_javaee</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="edureka_javaee-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="edureka_javaee:war exploded" />
+    </root>
+  </artifact>
+</component>

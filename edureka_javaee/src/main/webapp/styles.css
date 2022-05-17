@@ -1,0 +1,57 @@
+p, h5, h6{
+    text-align: justify;
+    color: orangered;
+}
+
+h1{
+
+    border: 10px groove dodgerblue;
+    background-color: beige;
+    color: crimson;
+    font-family: fantasy;
+
+}
+
+h2{
+    color: orangered;
+
+}
+h3{
+    color: blue;
+
+}
+h4{
+color: darkred;
+}
+
+
+#caption{
+
+    font-family: fantasy;
+    color: darkgreen;
+
+}
+
+#blogHeading{
+
+    font-family: cursive;
+    color: darkmagenta;
+}
+
+#myPara{
+
+    font-family: Bahnschrift;
+    color: black;
+}
+
+.myClass{
+
+    font-family: "Comic Sans MS";
+    color: darkslategray;
+
+}
+
+body{
+    background-color: aliceblue;
+}
+
